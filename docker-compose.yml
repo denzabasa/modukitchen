@@ -1,43 +1,25 @@
-version: '3'
-
 services:
-  payload:
-    image: node:22.23.5-alpine
-    ports:
-      - '3000:3000'
-    volumes:
-      - .:/home/node/app
-      - node_modules:/home/node/app/node_modules
-    working_dir: /home/node/app/
-    command: sh -c "corepack enable && corepack prepare pnpm@latest --activate && pnpm install && pnpm dev"
-    depends_on:
-      - mongo
-      # - postgres
-    env_file:
-      - .env
+  postgres:
+    image: postgres:16-alpine
+    container_name: modukitchen-postgres
+    restart: unless-stopped
 
-  # Ensure your DATABASE_URL uses 'mongo' as the hostname ie. mongodb://mongo/my-db-name
-  mongo:
-    image: mongo:latest
-    ports:
-      - '27017:27017'
-    command:
-      - --storageEngine=wiredTiger
-    volumes:
-      - data:/data/db
-    logging:
-      driver: none
+    environment:
+      POSTGRES_DB: modukitchen
+      POSTGRES_USER: modukitchen
+      POSTGRES_PASSWORD: modukitchen_local
 
-  # Uncomment the following to use postgres
-  # postgres:
-  #   restart: always
-  #   image: postgres:latest
-  #   volumes:
-  #     - pgdata:/var/lib/postgresql/data
-  #   ports:
-  #     - "5432:5432"
+    ports:
+      - "127.0.0.1:5433:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U modukitchen -d modukitchen"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
-  data:
-  # pgdata:
-  node_modules:
+  postgres_data:

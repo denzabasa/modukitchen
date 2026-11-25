@@ -1,4 +1,3 @@
-// Any setup scripts you might need go here
+import { loadTestEnvironment } from './tests/helpers/testEnv'
 
-// Load .env files
-import 'dotenv/config'
+loadTestEnvironment()

@@ -1,20 +1,47 @@
-import { test, expect, Page } from '@playwright/test'
+import { test, expect } from '@playwright/test'
 
-test.describe('Frontend', () => {
-  let page: Page
-
-  test.beforeAll(async ({ browser }, testInfo) => {
-    const context = await browser.newContext()
-    page = await context.newPage()
+test.describe('ModuKitchen Frontend', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/')
   })
 
-  test('can go on homepage', async ({ page }) => {
-    await page.goto('http://localhost:3000')
+  test('can load the homepage', async ({ page }) => {
+    await expect(page).toHaveTitle(
+      /ModuKitchen \| Kitchens Designed for Living/,
+    )
 
-    await expect(page).toHaveTitle(/Payload Blank Template/)
+    await expect(
+      page.getByRole('heading', { level: 1 }),
+    ).toContainText('Beautiful kitchens,')
 
-    const heading = page.locator('h1').first()
+    await expect(
+      page.getByRole('heading', { level: 1 }),
+    ).toContainText('designed for living.')
+  })
 
-    await expect(heading).toHaveText('Welcome to your new project.')
+  test('displays the design system', async ({ page }) => {
+    await expect(
+      page.getByRole('heading', {
+        name: 'Our colour palette',
+      }),
+    ).toBeVisible()
+  })
+
+  test('can navigate to the design system', async ({ page }) => {
+    await page
+      .getByRole('link', {
+        name: 'Explore our design system',
+      })
+      .click()
+
+    await expect(page).toHaveURL(/#design-system$/)
+  })
+
+  test('provides access to the CMS dashboard', async ({ page }) => {
+    await expect(
+      page.getByRole('link', {
+        name: 'CMS Dashboard',
+      }),
+    ).toHaveAttribute('href', '/admin')
   })
 })
