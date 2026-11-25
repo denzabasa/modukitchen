@@ -78,3 +78,80 @@ Date: 2026-11-25
 ### Next Lesson
 
 Lesson 09: Payload Hooks and Automatic Slug Generation.
+
+## Lesson 09: Payload Hooks and Automatic Slug Generation
+
+### Learning Objectives
+
+- Understand Payload document lifecycle hooks.
+- Differentiate collection-level and field-level hooks.
+- Implement reusable utility functions.
+- Implement reusable higher-order hook functions.
+- Understand unit testing and the testing pyramid.
+- Understand the Arrange, Act, Assert testing pattern.
+
+### Implementation
+
+- Created src/utilities/slugify.ts.
+- Created src/hooks/generateSlug.ts.
+- Registered the beforeValidate hook in Categories.
+- Implemented automatic slug generation.
+- Preserved existing slugs during document updates.
+- Supported manual slug overrides.
+- Preserved slug format validation and uniqueness.
+
+### Unit Testing
+
+- Created vitest.unit.config.mts.
+- Configured database-independent unit testing.
+- Added test:unit and test:unit:watch scripts.
+- Updated the main test command.
+- Implemented 15 slug utility unit tests.
+
+### Integration Testing
+
+- Extended the Categories integration test suite.
+- Added 8 automatic slug generation tests.
+- Verified slug generation and persistence.
+- Verified manual slug overrides.
+- Verified duplicate slug rejection.
+- Verified invalid generated slug rejection.
+
+### Technical Challenges
+
+#### TS2345 and TS2578
+
+Payload's Local API requires a slug during normal
+document creation at the TypeScript level.
+
+Resolved by placing @ts-expect-error above the
+payload.create() call in the intentional missing
+slug test.
+
+#### ESLint no-unused-expressions
+
+An accidental trailing comma after the afterAll()
+function introduced a JavaScript comma expression.
+
+Resolved by removing the trailing comma.
+
+### Testing Results
+
+- Unit tests: 15 passed.
+- Integration tests: 22 passed.
+- TypeScript: No errors.
+- ESLint: No errors or warnings.
+
+### Key Learnings
+
+- beforeValidate can populate fields before validation.
+- Higher-order functions enable reusable hooks.
+- Generated TypeScript types and runtime behaviour
+  can have different input requirements.
+- Existing slugs should be preserved to maintain URLs.
+- Unit tests should not depend on external services.
+- Integration tests verify connected system behaviour.
+
+### Next Lesson
+
+Lesson 10: Projects Collection and Entity Relationships.

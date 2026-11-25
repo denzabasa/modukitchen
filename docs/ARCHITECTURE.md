@@ -102,3 +102,59 @@ before production deployment.
 - Isolated testing environments
 - Incremental development
 - Version-controlled content models
+
+## Reusable Business Logic
+
+### Utilities
+
+Location: src/utilities
+
+Pure functions that do not depend on Payload CMS
+or external services.
+
+Implemented utilities:
+
+- slugify.ts: Converts strings into URL-friendly slugs.
+
+### Hooks
+
+Location: src/hooks
+
+Reusable Payload lifecycle hooks.
+
+Implemented hooks:
+
+- generateSlug.ts: Automatically generates slugs
+  from configurable source fields.
+
+### Slug Generation Strategy
+
+- Generate slugs during beforeValidate.
+- Generate automatically when no slug is provided.
+- Preserve existing slugs during document updates.
+- Allow explicit manual slug overrides.
+- Reject duplicate slugs within a collection.
+- Validate the final slug format.
+- Normalize accented Latin characters.
+- Use lowercase ASCII letters, numbers and hyphens.
+
+### Automated Testing Strategy
+
+Unit tests:
+
+- Configuration: vitest.unit.config.mts
+- Directory: tests/unit
+- Environment: Node.js
+- No database dependency.
+
+Integration tests:
+
+- Configuration: vitest.config.mts
+- Directory: tests/int
+- Database: modukitchen_test
+
+End-to-end tests:
+
+- Configuration: playwright.config.ts
+- Directory: tests/e2e
+- Browser: Chromium

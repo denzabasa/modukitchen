@@ -280,4 +280,144 @@ describe('Categories Collection', () => {
 
     expect(result.totalDocs).toBe(0)
   })
+
+  describe('Automatic Slug Generation', () => {
+    it('automatically generates a slug when omitted', async () => {
+      const name = `${prefix} Modern Kitchen`
+
+      // @ts-expect-error Intentionally omitting the required slug to test the hook
+      const category = await payload.create({
+        collection: 'categories',
+        data: {
+          name,
+          type: 'kitchen-style',
+        },
+      })
+
+      expect(category.slug).toBe(`${prefix}-modern-kitchen`)
+    })
+
+    it('generates a slug when explicitly empty', async () => {
+      const category = await payload.create({
+        collection: 'categories',
+        data: {
+          name: `${prefix} Luxury Kitchen`,
+          slug: '',
+          type: 'kitchen-style',
+        },
+      })
+
+      expect(category.slug).toBe(`${prefix}-luxury-kitchen`)
+    })
+
+    it('normalizes accents and special characters', async () => {
+      const category = await payload.create({
+        collection: 'categories',
+        data: {
+          name: `${prefix} Café & Dining`,
+          slug: '',
+          type: 'kitchen-style',
+        },
+      })
+
+      expect(category.slug).toBe(`${prefix}-cafe-dining`)
+    })
+
+    it('preserves a manually provided slug', async () => {
+      const customSlug = `${prefix}-custom-design`
+
+      const category = await payload.create({
+        collection: 'categories',
+        data: {
+          name: `${prefix} Premium Kitchen`,
+          slug: customSlug,
+          type: 'kitchen-style',
+        },
+      })
+
+      expect(category.slug).toBe(customSlug)
+    })
+
+    it('preserves the existing slug when the name changes', async () => {
+      const category = await payload.create({
+        collection: 'categories',
+        data: {
+          name: `${prefix} Original Kitchen`,
+          slug: '',
+          type: 'kitchen-style',
+        },
+      })
+
+      const updated = await payload.update({
+        collection: 'categories',
+        id: category.id,
+        data: {
+          name: `${prefix} Updated Kitchen`,
+        },
+      })
+
+      expect(updated.name).toBe(`${prefix} Updated Kitchen`)
+      expect(updated.slug).toBe(category.slug)
+    })
+
+    it('allows a manual slug update', async () => {
+      const category = await payload.create({
+        collection: 'categories',
+        data: {
+          name: `${prefix} Editable Kitchen`,
+          slug: '',
+          type: 'kitchen-style',
+        },
+      })
+
+      const newSlug = `${prefix}-renamed-kitchen`
+
+      const updated = await payload.update({
+        collection: 'categories',
+        id: category.id,
+        data: {
+          slug: newSlug,
+        },
+      })
+
+      expect(updated.slug).toBe(newSlug)
+    })
+
+    it('rejects duplicate automatically generated slugs', async () => {
+      const name = `${prefix} Duplicate Kitchen`
+
+      await payload.create({
+        collection: 'categories',
+        data: {
+          name,
+          slug: '',
+          type: 'kitchen-style',
+        },
+      })
+
+      await expect(
+        payload.create({
+          collection: 'categories',
+          data: {
+            name,
+            slug: '',
+            type: 'kitchen-style',
+          },
+        }),
+      ).rejects.toThrow()
+    })
+
+    it('rejects an empty generated slug', async () => {
+      await expect(
+        payload.create({
+          collection: 'categories',
+          data: {
+            name: '!@#$%^&*',
+            slug: '',
+            type: 'kitchen-style',
+          },
+        }),
+      ).rejects.toThrow()
+    })
+  })
 })

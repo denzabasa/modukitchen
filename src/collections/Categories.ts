@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { generateSlug } from '../hooks/generateSlug'
 
 export const Categories: CollectionConfig = {
   slug: 'categories',
@@ -39,6 +40,12 @@ export const Categories: CollectionConfig = {
     delete: ({ req: { user } }) => Boolean(user),
   },
 
+  hooks: {
+    beforeValidate: [
+      generateSlug('name'),
+    ],
+  },
+
   fields: [
     {
       name: 'name',
@@ -64,7 +71,7 @@ export const Categories: CollectionConfig = {
       },
       admin: {
         description:
-          'URL-friendly identifier, e.g. modern-kitchens.',
+          'Automatically generated from the name if left empty. You may also enter a custom slug.',
       },
     },
     {

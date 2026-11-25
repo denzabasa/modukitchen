@@ -67,3 +67,29 @@ pnpm build
 - Relevant automated tests passed.
 - Documentation updated.
 - Changes committed and pushed.
+
+## Unit Testing
+
+pnpm test:unit
+
+Unit tests do not require PostgreSQL or a running
+Next.js development server.
+
+## Unit Testing Watch Mode
+
+pnpm test:unit:watch
+
+Automatically reruns unit tests when source files
+or test files change.
+
+## Complete Testing Pipeline
+
+pnpm test
+
+Execution order:
+
+1. Unit tests
+2. Integration tests
+3. End-to-end tests
+
+The pipeline stops when any testing stage fails.
