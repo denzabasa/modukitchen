@@ -93,3 +93,28 @@ Execution order:
 3. End-to-end tests
 
 The pipeline stops when any testing stage fails.
+
+## Feature-Driven Development
+
+The current development priority is completing the core ModuKitchen application.
+
+### Development cycle
+
+1. Understand the feature requirements.
+2. Design the content model.
+3. Implement the feature.
+4. Generate Payload types when necessary.
+5. Perform manual functional and security verification.
+6. Run TypeScript and ESLint checks.
+7. Update project documentation.
+8. Commit and push changes to GitHub.
+
+Production builds will be verified at major development milestones.
+
+### Automated testing strategy
+
+Existing unit, integration and E2E tests will be retained.
+
+Comprehensive automated testing will resume after the core application features are implemented. Critical security and access control checks must not be deferred.
+
+Future testing improvements may incorporate Claude Code, custom Skills and AI-assisted development workflows.

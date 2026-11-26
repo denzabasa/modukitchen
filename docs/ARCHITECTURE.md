@@ -158,3 +158,47 @@ End-to-end tests:
 - Configuration: playwright.config.ts
 - Directory: tests/e2e
 - Browser: Chromium
+
+## Projects and Media Architecture
+
+### Projects Collection
+
+The Projects collection manages completed modular kitchen installations and portfolio content.
+
+Key capabilities:
+
+- Automatic slug generation
+- Rich text descriptions
+- Featured images
+- Multiple gallery images
+- Kitchen style relationships
+- Kitchen layout relationships
+- Project type relationships
+- Featured project selection
+- Drafts and publishing
+- Content version history
+
+### Media Collection
+
+The Media collection manages reusable image assets with accessibility metadata, cropping and focal point support.
+
+| Image variant | Dimensions |
+|---|---|
+| Thumbnail | 400 × 300 |
+| Card | 800 × 600 |
+| Gallery | 1200px wide, proportional height |
+| Hero | 1920 × 1080 |
+
+Images are processed using Sharp, with enlargement disabled.
+
+### Media Storage
+
+- Development: `media/`
+- Automated testing: `tests/.tmp/media/`
+- Production: Persistent object storage, to be implemented before deployment.
+
+### Content Relationships
+
+Projects reference Categories and Media through Payload relationship and upload fields.
+
+Public project queries must enforce published content access restrictions. Server-side public queries using the Local API must explicitly disable access overrides.
